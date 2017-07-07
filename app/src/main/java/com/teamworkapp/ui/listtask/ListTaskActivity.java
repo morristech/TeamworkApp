@@ -1,7 +1,6 @@
 package com.teamworkapp.ui.listtask;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,9 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
@@ -21,7 +18,6 @@ import com.teamworkapp.R;
 import com.teamworkapp.data.model.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
-
 import com.teamworkapp.ui.addTask.AddTaskActivity;
 import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
@@ -44,7 +40,6 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
 
     private Logger logger = Logger.getLogger(getClass());
     private CompositeSubscription mCompositeSubscription;
-    private ArrayList<TodoItem> countryItemList;
     private LinearLayout mainLayout;
     private TaskListAdapter adapter;
     private RecyclerView recyclerView;

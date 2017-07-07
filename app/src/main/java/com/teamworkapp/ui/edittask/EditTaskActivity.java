@@ -3,6 +3,7 @@ package com.teamworkapp.ui.edittask;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -11,15 +12,34 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.teamworkapp.R;
+import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.remote.TaskInterface;
+import com.teamworkapp.util.Logger;
+import com.teamworkapp.util.NetworkUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import javax.inject.Inject;
+
+import rx.subscriptions.CompositeSubscription;
 
 
 public class EditTaskActivity extends AppCompatActivity {
+
+
+    @Inject
+    TaskInterface taskInterface;
+
+    private Logger logger = Logger.getLogger(getClass());
+    private CompositeSubscription mCompositeSubscription;
+    private LinearLayout mainLayout;
+    private Snackbar snackbarOffline;
 
     private SeekBar seekBar;
     private TextView seekbarPercentage;
@@ -28,8 +48,13 @@ public class EditTaskActivity extends AppCompatActivity {
     private Calendar calendar;
     private TextView startDate;
     private TextView dueDate;
-
     private int year, month, day;
+    private ArrayList<TodoItem> mTodoItem;
+    private int position;
+
+    private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority;
+
+    private SeekBar progressSeekbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +67,36 @@ public class EditTaskActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mCompositeSubscription = new CompositeSubscription();
+        init();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mTodoItem = (ArrayList<TodoItem>) getIntent().getSerializableExtra("mTodoItem");
+            position = extras.getInt("position");
+            setValues();
+        }
+
+
+        loadView();
+
+    }
+
+
+    // Initialize the view
+    public void init() {
+
+        mainLayout = (LinearLayout) findViewById(R.id.edit_layout);
+        title = (TextView) findViewById(R.id.title);
+        description = (TextView) findViewById(R.id.description);
+        projectName = (TextView) findViewById(R.id.project_name);
+        taskType = (TextView) findViewById(R.id.task_type);
+        tags = (TextView) findViewById(R.id.tags_count);
+        seekPercentage = (TextView) findViewById(R.id.seekbar_percentage);
+        estimated = (TextView) findViewById(R.id.estimated);
+        priority = (TextView) findViewById(R.id.priority);
+
+
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
 
@@ -49,14 +104,12 @@ public class EditTaskActivity extends AppCompatActivity {
         day = calendar.get(Calendar.DAY_OF_MONTH);
         //showDate(year, month+1, day);
 
-
         startDate = (TextView) findViewById(R.id.start_date);
         dueDate = (TextView) findViewById(R.id.due_date);
 
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.notify_switch);
+
         seekbarPercentage = (TextView) findViewById(R.id.seekbar_percentage);
-
-
         seekBar = (SeekBar) findViewById(R.id.progress_seekbar );
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -77,6 +130,92 @@ public class EditTaskActivity extends AppCompatActivity {
 
     }
 
+
+    public void setValues(){
+
+        String ctitle = "";
+        String cDesc = "";
+        String cProjectName = "";
+        String cTaskType = "";
+        int cTags = 0;
+        String cSeekPercentage = "";
+        String cStartDate = "";
+        String cDueDate = "";
+        int cEstimated = 0;
+        String cPriority = "";
+
+        String formattedStartDate = "";
+        String formattedDueDate = "";
+
+        if(mTodoItem.get(position).getContent() != null) ctitle = mTodoItem.get(position).getContent();
+        if(mTodoItem.get(position).getDescription() != null) cDesc = mTodoItem.get(position).getDescription();
+        if(mTodoItem.get(position).getProjectName() != null) cProjectName = mTodoItem.get(position).getProjectName();
+        if(mTodoItem.get(position).getTodoListName() != null) cTaskType = mTodoItem.get(position).getTodoListName();
+
+        if(mTodoItem.get(position).getTags() != null) cTags = mTodoItem.get(position).getTags().size();
+
+        if(mTodoItem.get(position).getProgress() != null) cSeekPercentage = mTodoItem.get(position).getProgress() + cSeekPercentage;
+
+
+        if(mTodoItem.get(position).getStartDate() != null){
+            cStartDate = mTodoItem.get(position).getStartDate();
+            formattedStartDate = cStartDate.substring(6,7);
+            formattedStartDate = formattedStartDate + "/" + cStartDate.substring(4,5);
+            formattedStartDate = formattedStartDate + "/" + cStartDate.substring(0,3);
+        }
+
+        if(mTodoItem.get(position).getDueDate() != null){
+            cDueDate = mTodoItem.get(position).getDueDate();
+            formattedStartDate = cDueDate.substring(6,7);
+            formattedStartDate = formattedStartDate + "/" + cDueDate.substring(4,5);
+            formattedStartDate = formattedStartDate + "/" + cDueDate.substring(0,3);
+        }
+
+        if(mTodoItem.get(position).getEstimatedMinutes() != null) cEstimated = mTodoItem.get(position).getEstimatedMinutes();
+        if(mTodoItem.get(position).getPriority() != null) cPriority = mTodoItem.get(position).getPriority();
+
+
+        title.setText(ctitle);
+        description.setText(cDesc);
+        projectName.setText(cProjectName);
+        taskType.setText(cTaskType);
+        tags.setText(String.valueOf(cTags) + " Tags");
+
+        seekPercentage.setText(cSeekPercentage + "%");
+        seekBar.setProgress(Integer.parseInt(cSeekPercentage));
+
+        startDate.setText(formattedStartDate);
+        dueDate.setText(formattedDueDate);
+        estimated.setText(String.valueOf(cEstimated));
+        priority.setText(cPriority);
+
+    }
+
+
+    public void loadView(){
+        if(NetworkUtil.isConnected(getApplicationContext())) {
+            hideOfflineSnackBar();
+        } else {
+            displayOfflineSnackbar();
+        }
+    }
+
+
+    public void setProject(){
+
+    }
+
+    public void setTaskList(){
+
+    }
+
+    public void setTags(){
+
+    }
+
+    public void setColumn(){
+
+    }
 
 
     @SuppressWarnings("deprecation")
@@ -140,10 +279,52 @@ public class EditTaskActivity extends AppCompatActivity {
                 .append(month).append("/").append(year));
     }
 
+    public void setEstimated(){
+
+    }
+
+    public void setPriority(){
+
+    }
+
 
     public void saveTask() {
 
     }
+
+
+    public void displayOfflineSnackbar() {
+        snackbarOffline = Snackbar.make(mainLayout, R.string.no_connection_snackbar, Snackbar.LENGTH_INDEFINITE);
+        TextView snackbarText = (TextView) snackbarOffline.getView().findViewById(android.support.design.R.id.snackbar_text);
+        snackbarText.setTextColor(getApplicationContext().getResources().getColor(android.R.color.white));
+        snackbarOffline.setAction(R.string.snackbar_action_retry, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadView();
+            }
+        });
+        snackbarOffline.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+        snackbarOffline.show();
+    }
+
+    public void hideOfflineSnackBar() {
+        if (snackbarOffline != null && snackbarOffline.isShown()) {
+            snackbarOffline.dismiss();
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (mCompositeSubscription.hasSubscriptions()) {
+            mCompositeSubscription.unsubscribe();
+        }
+        super.onDestroy();
+    }
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

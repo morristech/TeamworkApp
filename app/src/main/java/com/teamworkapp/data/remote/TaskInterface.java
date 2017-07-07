@@ -2,8 +2,6 @@ package com.teamworkapp.data.remote;
 
 import com.teamworkapp.data.model.Task;
 
-import java.util.List;
-
 import retrofit.Callback;
 import retrofit.http.GET;
 import rx.Observable;
@@ -19,5 +17,7 @@ public interface TaskInterface {
 
     @GET("/tasks.json")
     Observable<Task> getAllTask();
+
+
 
 }

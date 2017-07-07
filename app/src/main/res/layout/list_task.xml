@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Flux Capacitor Design: tosinmath"
         android:textColor="@color/colorGreen"
+        android:textStyle="bold"
         android:padding="10dp"
         android:textSize="18sp"
         />
