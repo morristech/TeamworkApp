@@ -1,10 +1,14 @@
 package com.teamworkapp.data.remote;
 
 import android.app.Application;
-import android.content.Context;
+import android.util.Log;
 
 import com.teamworkapp.data.model.Task;
+import com.teamworkapp.data.model.TaskUpdate;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -42,6 +46,22 @@ public class TaskInteractorImpl implements TaskInteractor {
                     }
                 });
 
+    }
+
+
+    public void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+
+        taskInterface.editTask(id, taskUpdate, new Callback<Task>() {
+            @Override
+            public void success(Task info, Response response) {
+                Task example = info;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("RetrofitError: ", error.getLocalizedMessage());
+            }
+        });
     }
 
 

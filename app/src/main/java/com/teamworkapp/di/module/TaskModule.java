@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.teamworkapp.data.remote.TaskInteractor;
 import com.teamworkapp.data.remote.TaskInteractorImpl;
+import com.teamworkapp.ui.edittask.EditTaskPresenter;
 import com.teamworkapp.ui.listtask.ListTaskPresenter;
 
 import dagger.Module;
@@ -25,6 +26,11 @@ public class TaskModule {
     @Provides
     public ListTaskPresenter getHelloPresenter(TaskInteractor taskInteractor){
         return new ListTaskPresenter(application, taskInteractor);
+    }
+
+    @Provides
+    public EditTaskPresenter getEditTaskPresenter(TaskInteractor taskInteractor){
+        return new EditTaskPresenter(application, taskInteractor);
     }
 
 

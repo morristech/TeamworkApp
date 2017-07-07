@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,9 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
+import com.teamworkapp.data.model.EditTask;
+import com.teamworkapp.data.model.TaskUpdate;
 import com.teamworkapp.data.model.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
+import com.teamworkapp.di.component.TaskComponent;
+import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
 import com.teamworkapp.util.NetworkUtil;
 
@@ -30,8 +34,10 @@ import javax.inject.Inject;
 import rx.subscriptions.CompositeSubscription;
 
 
-public class EditTaskActivity extends AppCompatActivity {
+public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
+    @Inject
+    EditTaskPresenter presenter;
 
     @Inject
     TaskInterface taskInterface;
@@ -51,15 +57,17 @@ public class EditTaskActivity extends AppCompatActivity {
     private int year, month, day;
     private ArrayList<TodoItem> mTodoItem;
     private int position;
+    private String postId;
 
     private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority;
 
     private SeekBar progressSeekbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
         setContentView(R.layout.activity_edit_task);
+        ((BaseApplication) getApplication()).getComponent().inject(this);
+        presenter.attachView(this);
 
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -128,6 +136,9 @@ public class EditTaskActivity extends AppCompatActivity {
             }
         });
 
+
+
+
     }
 
 
@@ -147,6 +158,7 @@ public class EditTaskActivity extends AppCompatActivity {
         String formattedStartDate = "";
         String formattedDueDate = "";
 
+        if(mTodoItem.get(position).getId() != null) postId = String.valueOf(mTodoItem.get(position).getId());
         if(mTodoItem.get(position).getContent() != null) ctitle = mTodoItem.get(position).getContent();
         if(mTodoItem.get(position).getDescription() != null) cDesc = mTodoItem.get(position).getDescription();
         if(mTodoItem.get(position).getProjectName() != null) cProjectName = mTodoItem.get(position).getProjectName();
@@ -158,17 +170,11 @@ public class EditTaskActivity extends AppCompatActivity {
 
 
         if(mTodoItem.get(position).getStartDate() != null){
-            cStartDate = mTodoItem.get(position).getStartDate();
-            formattedStartDate = cStartDate.substring(6,7);
-            formattedStartDate = formattedStartDate + "/" + cStartDate.substring(4,5);
-            formattedStartDate = formattedStartDate + "/" + cStartDate.substring(0,3);
+            formattedStartDate = formatDateForward(mTodoItem.get(position).getStartDate());
         }
 
         if(mTodoItem.get(position).getDueDate() != null){
-            cDueDate = mTodoItem.get(position).getDueDate();
-            formattedStartDate = cDueDate.substring(6,7);
-            formattedStartDate = formattedStartDate + "/" + cDueDate.substring(4,5);
-            formattedStartDate = formattedStartDate + "/" + cDueDate.substring(0,3);
+            formattedDueDate = formatDateForward(mTodoItem.get(position).getDueDate());
         }
 
         if(mTodoItem.get(position).getEstimatedMinutes() != null) cEstimated = mTodoItem.get(position).getEstimatedMinutes();
@@ -188,6 +194,24 @@ public class EditTaskActivity extends AppCompatActivity {
         dueDate.setText(formattedDueDate);
         estimated.setText(String.valueOf(cEstimated));
         priority.setText(cPriority);
+
+    }
+
+
+    public void updateTask(){
+
+        EditTask ss = new EditTask();
+        ss.setContent(title.getText().toString());
+        ss.setDescription(description.getText().toString());
+        ss.setDueDate(formatDateBackward(dueDate.getText().toString()));
+        ss.setPriority(priority.getText().toString());
+        ss.setProgress(seekbarPercentage.getText().toString().replace("%", ""));
+        ss.setResponsiblePartyId("999");
+        ss.setStartDate(formatDateBackward(startDate.getText().toString()));
+        ss.setTags(tags.getText().toString());
+
+        TaskUpdate tu = new TaskUpdate(ss);
+        presenter.updateTaskList(taskInterface, tu, postId);
 
     }
 
@@ -287,10 +311,22 @@ public class EditTaskActivity extends AppCompatActivity {
 
     }
 
-
-    public void saveTask() {
-
+    public String formatDateForward(String unformatedStr){
+        String formatted = "";
+        formatted = unformatedStr.substring(6,7);
+        formatted = unformatedStr + "/" + unformatedStr.substring(4,5);
+        formatted = unformatedStr + "/" + unformatedStr.substring(0,3);
+        return formatted;
     }
+
+    public String formatDateBackward(String unformatedStr){
+        String formatted = "";
+        formatted = unformatedStr.substring(0,3);
+        formatted = unformatedStr + unformatedStr.substring(4,5);
+        formatted = unformatedStr + unformatedStr.substring(6,7);
+        return formatted;
+    }
+
 
 
     public void displayOfflineSnackbar() {
@@ -311,6 +347,15 @@ public class EditTaskActivity extends AppCompatActivity {
         if (snackbarOffline != null && snackbarOffline.isShown()) {
             snackbarOffline.dismiss();
         }
+    }
+
+
+    public void showLoading(){
+
+    }
+
+    public void hideLoading(){
+
     }
 
 
@@ -342,7 +387,7 @@ public class EditTaskActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.action_edit_task:
-                saveTask();
+                updateTask();
         }
         return super.onOptionsItemSelected(item);
     }
