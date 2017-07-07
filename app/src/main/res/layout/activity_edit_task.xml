@@ -6,7 +6,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    tools:context="com.teamworkapp.ui.addtask.AddTaskActivity">
+    tools:context="com.teamworkapp.ui.edittask.EditTaskActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorWhite"
-                android:text="Add Task"
+                android:text="Edit Task"
                 android:paddingLeft="10dp"
                 />
 

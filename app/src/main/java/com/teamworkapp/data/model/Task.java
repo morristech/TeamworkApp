@@ -13,19 +13,20 @@ import java.util.Map;
 
 public class Task implements java.io.Serializable {
 
-    @SerializedName("STATUS")
-    private String status;
+    //@SerializedName("STATUS")
+    //private String status;
     @SerializedName("todo-items")
     private List<TodoItem> todoItems = null;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getStatus() {
+    /*public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
     }
+    */
 
     public List<TodoItem> getTodoItems() {
         return todoItems;
@@ -34,6 +35,7 @@ public class Task implements java.io.Serializable {
     public void setTodoItems(List<TodoItem> todoItems) {
         this.todoItems = todoItems;
     }
+
 
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;

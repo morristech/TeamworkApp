@@ -2,8 +2,8 @@ package com.teamworkapp.di.module;
 
 import android.app.Application;
 
-import com.teamworkapp.data.remote.TaskFetcher;
-import com.teamworkapp.data.remote.TaskFetcherImpl;
+import com.teamworkapp.data.remote.TaskInteractor;
+import com.teamworkapp.data.remote.TaskInteractorImpl;
 import com.teamworkapp.ui.listtask.ListTaskPresenter;
 
 import dagger.Module;
@@ -23,14 +23,14 @@ public class TaskModule {
     }
 
     @Provides
-    public ListTaskPresenter getHelloPresenter(TaskFetcher taskFetcher){
-        return new ListTaskPresenter(application, taskFetcher);
+    public ListTaskPresenter getHelloPresenter(TaskInteractor taskInteractor){
+        return new ListTaskPresenter(application, taskInteractor);
     }
 
 
     @Provides
-    TaskFetcher provideHelloFetcher() {
-        return new TaskFetcherImpl( application );
+    TaskInteractor provideHelloFetcher() {
+        return new TaskInteractorImpl( application );
     }
 
 
