@@ -4,15 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.Task;
+import com.teamworkapp.data.model.Tag;
 import com.teamworkapp.data.model.TodoItem;
 import com.teamworkapp.ui.edittask.EditTaskActivity;
 import com.teamworkapp.util.Logger;
@@ -38,7 +38,7 @@ public class TaskListAdapter
     private String cProjectName;
     private String ctitle;
     private String cDesc;
-    private String ctag;
+    private List<Tag> ctag;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,7 +46,8 @@ public class TaskListAdapter
         public final TextView projectName;
         public final TextView title;
         public final TextView description;
-        public final TextView tag;
+        //public final TextView tag;
+        public final ViewGroup layout;
 
         public ViewHolder(View view) {
             super(view);
@@ -55,7 +56,8 @@ public class TaskListAdapter
             projectName = (TextView) view.findViewById(R.id.project_name);
             title = (TextView) view.findViewById(R.id.title);
             description = (TextView) view.findViewById(R.id.description);
-            tag = (TextView) view.findViewById(R.id.tag);
+            //tag = (TextView) view.findViewById(R.id.tag);
+            layout = (ViewGroup) view.findViewById(R.id.tag_list);
         }
 
         @Override
@@ -91,7 +93,7 @@ public class TaskListAdapter
         cProjectName = "";
         ctitle = "";
         cDesc = "";
-        ctag = "";
+        ctag = new ArrayList<Tag>();
 
         if (model.getProjectName() != null) {
             cProjectName = model.getProjectName();
@@ -106,13 +108,53 @@ public class TaskListAdapter
         }
 
         if (model.getTags() != null) {
-            //ctag = model.getTags();
+            ctag = model.getTags();
         }
 
-        holder.projectName.setText(cProjectName);
+        // check project names
+        if(position > 0){
+            if(mTodoItem.get(position-1).getProjectName().toString().equals(cProjectName.toString())){
+                holder.projectName.setVisibility(View.GONE);
+            } else {
+                holder.projectName.setVisibility(View.VISIBLE);
+                holder.projectName.setText(cProjectName);
+            }
+
+        } else {
+            holder.projectName.setText(cProjectName);
+        }
+
+        logger.debug(String.valueOf(position));
+
         holder.title.setText(ctitle);
+
+        if(cDesc.length() > 30) {
+            cDesc = cDesc.substring(0, 30) + "...";
+        }
+
         holder.description.setText(cDesc);
-        holder.tag.setText(ctag);
+        //holder.tag.setText(ctag);
+
+
+
+        for(int i = 0; i<ctag.size(); i++) {
+            TextView tagTextView = new TextView(mContext);
+
+            tagTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            llp.setMargins(0, 0, 5, 0);
+
+            tagTextView.setText(ctag.get(i).getName());
+            tagTextView.setTextColor(mContext.getResources().getColor(R.color.colorWhite));
+            tagTextView.setTextSize(10);
+            tagTextView.setPadding(5, 5, 5, 5);
+            tagTextView.setGravity(Gravity.LEFT);
+            tagTextView.setBackgroundColor(mContext.getResources().getColor(R.color.colorRed));
+            tagTextView.setLayoutParams(llp);
+            holder.layout.addView(tagTextView);
+        }
+
 
         // launch the edit task activity to show Task information
         holder.mView.setOnClickListener(new View.OnClickListener() {
