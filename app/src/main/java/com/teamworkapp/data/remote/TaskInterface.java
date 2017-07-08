@@ -1,8 +1,9 @@
 package com.teamworkapp.data.remote;
 
-import com.teamworkapp.data.model.Projects;
-import com.teamworkapp.data.model.Task;
-import com.teamworkapp.data.model.TaskUpdate;
+import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.Task;
+import com.teamworkapp.data.model.task.TaskUpdate;
+import com.teamworkapp.data.model.tasklist.Tasklists;
 
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -32,8 +33,9 @@ public interface TaskInterface {
     @GET("/projects.json?status=ALL")
     Observable<Projects> getAllProject();
 
-    @GET("/projects/{project_id}/tasklists.json")
-    Observable<Projects> getAllTasklist();
+    // /projects/{project_id}/tasklists.json
+    @GET("/projects/{id}/tasklists.json")
+    Observable<Tasklists> getTasklist(@Path("id") String id);
 
 
 }

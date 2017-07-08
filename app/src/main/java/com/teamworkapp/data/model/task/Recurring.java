@@ -1,4 +1,4 @@
-package com.teamworkapp.data.model;
+package com.teamworkapp.data.model.task;
 
 import java.util.HashMap;
 import java.util.Map;

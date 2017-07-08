@@ -1,10 +1,13 @@
 package com.teamworkapp.ui.addTask;
 
 import android.app.Application;
+import android.util.Log;
 
-import com.teamworkapp.data.model.Project;
-import com.teamworkapp.data.model.Projects;
-import com.teamworkapp.data.model.TaskUpdate;
+import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.TaskUpdate;
+import com.teamworkapp.data.model.tasklist.Tasklist;
+import com.teamworkapp.data.model.tasklist.Tasklists;
 import com.teamworkapp.data.remote.TaskInteractor;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.ui.base.BasePresenter;
@@ -67,6 +70,36 @@ public class AddTaskPresenter extends BasePresenter<AddTaskView>{
 
                         ArrayList<Project> projectItemList = new ArrayList<Project>(arr);
                         getMvpView().setProjectName(projectItemList);
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        logger.debug(throwable.getLocalizedMessage());
+                    }
+                }));
+
+    }
+
+
+    public void getTaskList(TaskInterface taskInterface, CompositeSubscription mCompositeSubscription, String projectId){
+
+        mCompositeSubscription.add(taskInteractor.fetchTaskList(taskInterface, projectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Tasklists>() {
+                    @Override
+                    public void call(Tasklists posts) {
+
+                        List<Tasklist> arr = posts.getTasklists();
+
+                        ArrayList<Tasklist> tasklistItem = new ArrayList<Tasklist>(arr);
+                        for(int i=0; i<tasklistItem.size(); i++){
+                            logger.debug(tasklistItem.get(i).getName());
+                            logger.debug(tasklistItem.get(i).getId());
+                        }
+
+                        //getMvpView().setProjectName(projectItemList);
 
                     }
                 }, new Action1<Throwable>() {

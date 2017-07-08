@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.addTask.AddTaskActivity;

@@ -2,9 +2,9 @@ package com.teamworkapp.ui.edittask;
 
 import android.app.Application;
 
-import com.teamworkapp.data.model.Project;
-import com.teamworkapp.data.model.Projects;
-import com.teamworkapp.data.model.TaskUpdate;
+import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.remote.TaskInteractor;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.ui.base.BasePresenter;

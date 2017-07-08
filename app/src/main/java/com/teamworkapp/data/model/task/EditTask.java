@@ -1,4 +1,4 @@
-package com.teamworkapp.data.model;
+package com.teamworkapp.data.model.task;
 
 import com.google.gson.annotations.SerializedName;
 

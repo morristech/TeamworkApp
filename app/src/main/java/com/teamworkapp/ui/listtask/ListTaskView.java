@@ -1,8 +1,6 @@
 package com.teamworkapp.ui.listtask;
 
-import android.graphics.drawable.Drawable;
-
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.ui.base.MvpView;
 
 import java.util.ArrayList;

@@ -21,10 +21,10 @@ import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.EditTask;
-import com.teamworkapp.data.model.Project;
-import com.teamworkapp.data.model.TaskUpdate;
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.task.EditTask;
+import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.task.TaskUpdate;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;

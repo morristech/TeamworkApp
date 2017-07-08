@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.Tag;
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.task.Tag;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.ui.edittask.EditTaskActivity;
 import com.teamworkapp.util.Logger;
 

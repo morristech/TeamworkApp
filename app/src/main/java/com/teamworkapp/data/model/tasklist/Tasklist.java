@@ -1,10 +1,10 @@
-package com.teamworkapp.data.model;
+package com.teamworkapp.data.model.tasklist;
 
 /**
  * @author Tosin Onikute.
  */
 
-public class Project {
+public class Tasklist {
 
     private String name;
     private String id;

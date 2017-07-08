@@ -2,8 +2,8 @@ package com.teamworkapp.ui.listtask;
 
 import android.app.Application;
 
-import com.teamworkapp.data.model.Task;
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.task.Task;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInteractor;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.ui.base.BasePresenter;

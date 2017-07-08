@@ -1,4 +1,4 @@
-package com.teamworkapp.data.model;
+package com.teamworkapp.data.model.project;
 
 /**
  * @author Tosin Onikute.

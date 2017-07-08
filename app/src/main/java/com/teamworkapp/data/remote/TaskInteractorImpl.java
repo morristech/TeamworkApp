@@ -3,9 +3,10 @@ package com.teamworkapp.data.remote;
 import android.app.Application;
 import android.util.Log;
 
-import com.teamworkapp.data.model.Projects;
-import com.teamworkapp.data.model.Task;
-import com.teamworkapp.data.model.TaskUpdate;
+import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.Task;
+import com.teamworkapp.data.model.task.TaskUpdate;
+import com.teamworkapp.data.model.tasklist.Tasklists;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -84,6 +85,7 @@ public class TaskInteractorImpl implements TaskInteractor {
 
     }
 
+
     public void addTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
 
         taskInterface.editTask(id, taskUpdate, new Callback<Task>() {
@@ -97,6 +99,25 @@ public class TaskInteractorImpl implements TaskInteractor {
                 Log.d("RetrofitError: ", error.getLocalizedMessage());
             }
         });
+    }
+
+
+    public Observable<Tasklists> fetchTaskList(TaskInterface taskInterface, String projectId){
+
+        return taskInterface.getTasklist(projectId)
+                .flatMap(new Func1<Tasklists, Observable<Tasklists>>() {
+                    @Override
+                    public Observable<Tasklists> call(Tasklists task) {
+                        return Observable.just(task);
+                    }
+                })
+                .onErrorReturn(new Func1<Throwable, Tasklists>() {
+                    @Override
+                    public Tasklists call(Throwable thr) {
+                        return null;
+                    }
+                });
+
     }
 
 

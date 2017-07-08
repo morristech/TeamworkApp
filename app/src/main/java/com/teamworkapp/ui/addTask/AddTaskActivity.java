@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,10 +20,10 @@ import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.EditTask;
-import com.teamworkapp.data.model.Project;
-import com.teamworkapp.data.model.TaskUpdate;
-import com.teamworkapp.data.model.TodoItem;
+import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.task.EditTask;
+import com.teamworkapp.data.model.task.TaskUpdate;
+import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
@@ -154,6 +153,8 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
         // fetch the Project TaskList
 
 
+
+
         // Retrieve the TaskList ID
 
 
@@ -201,20 +202,20 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
                 .setView(yourCustomView)
                 .setPositiveButton("SET PROJECT NAME", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //
+                        //presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .setSingleChoiceItems(items.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        Log.d("CustomDialog", String.valueOf(item));
-                        projectName.setText(items.get(item).toString());
-                        projectId = projectItemList.get(item).getId();
+//                        Log.d("CustomDialog", String.valueOf(item));
+//                        projectName.setText(items.get(item).toString());
+//                        projectId = projectItemList.get(item).getId();
                     }
                 })
-
                 .create();
         dialog.show();
+
 
 
     }
