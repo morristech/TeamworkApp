@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.NewTask;
 import com.teamworkapp.data.model.task.Task;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.tasklist.Tasklists;
@@ -82,13 +83,12 @@ public class TaskInteractorImpl implements TaskInteractor {
                         return null;
                     }
                 });
-
     }
 
 
-    public void addTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+    public void addTask(TaskInterface taskInterface, NewTask newTask, String id){
 
-        taskInterface.editTask(id, taskUpdate, new Callback<Task>() {
+        taskInterface.addTask(id, newTask, new Callback<Task>() {
             @Override
             public void success(Task info, Response response) {
                 Task example = info;

@@ -1,6 +1,7 @@
 package com.teamworkapp.ui.addTask;
 
 import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.ui.base.MvpView;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public interface AddTaskView extends MvpView {
     void loadView();
 
     void setProjectName(ArrayList<Project> projectNames);
+
+    void setTaskLists(ArrayList<Tasklist> taskListNames);
 
     void displayOfflineSnackbar();
 

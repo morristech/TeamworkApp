@@ -46,7 +46,7 @@ public class NetModule {
                 .setEndpoint(Api.BASE_URL)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(new GsonBuilder().create()))
-                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
         return restAdapter;

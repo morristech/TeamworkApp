@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,9 +22,12 @@ import android.widget.TextView;
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
 import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.task.AddTask;
 import com.teamworkapp.data.model.task.EditTask;
+import com.teamworkapp.data.model.task.NewTask;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.task.TodoItem;
+import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
 import com.teamworkapp.ui.base.BaseActivity;
@@ -62,13 +66,17 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
     private ArrayList<TodoItem> mTodoItem;
     private int position;
     private String projectId;
+    private String taskListId;
 
     private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority;
 
     private SeekBar progressSeekbar;
 
     private ArrayList<String> items = new ArrayList<String>();
-    private ArrayList<Project> projectItemList = new ArrayList<Project>();;
+    private ArrayList<Project> projectItemList = new ArrayList<Project>();
+
+    private ArrayList<String> taskItems = new ArrayList<String>();
+    private ArrayList<Tasklist> taskItemList = new ArrayList<Tasklist>();
 
     @Override
     protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
@@ -151,16 +159,10 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
     public void newTask(){
 
         // fetch the Project TaskList
-
-
-
-
         // Retrieve the TaskList ID
-
-
         // Add New task with retrieved ID
 
-        EditTask ss = new EditTask();
+        AddTask ss = new AddTask();
         ss.setContent(title.getText().toString());
         ss.setDescription(description.getText().toString());
         ss.setDueDate(formatDateBackward(dueDate.getText().toString()));
@@ -170,8 +172,8 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
         ss.setStartDate(formatDateBackward(startDate.getText().toString()));
         ss.setTags(tags.getText().toString());
 
-        TaskUpdate tu = new TaskUpdate(ss);
-        presenter.addTaskList(taskInterface, tu, projectId);
+        NewTask nt = new NewTask(ss);
+        presenter.addTaskList(taskInterface, nt, taskListId);
 
     }
 
@@ -181,6 +183,13 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
             hideOfflineSnackBar();
         } else {
             displayOfflineSnackbar();
+        }
+    }
+
+    public void setTaskLists(ArrayList<Tasklist> taskListNames){
+        taskItemList = taskListNames;
+        for(int i=0; i<taskListNames.size(); i++){
+            taskItems.add(taskListNames.get(i).getName().toString());
         }
     }
 
@@ -202,26 +211,45 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
                 .setView(yourCustomView)
                 .setPositiveButton("SET PROJECT NAME", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
+                        presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .setSingleChoiceItems(items.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-//                        Log.d("CustomDialog", String.valueOf(item));
-//                        projectName.setText(items.get(item).toString());
-//                        projectId = projectItemList.get(item).getId();
+                        Log.d("CustomDialog", String.valueOf(item));
+                        projectName.setText(items.get(item).toString());
+                        projectId = projectItemList.get(item).getId();
                     }
                 })
                 .create();
         dialog.show();
 
-
-
     }
 
     public void setTaskList(View view){
 
+        LayoutInflater inflater = LayoutInflater.from(AddTaskActivity.this);
+        final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(AddTaskActivity.this)
+                .setTitle("Select a Projects")
+                .setView(yourCustomView)
+                .setPositiveButton("SET TASK LIST", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .setSingleChoiceItems(taskItems.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Log.d("CustomDialog", String.valueOf(item));
+                        taskType.setText(taskItems.get(item).toString());
+                        taskListId = taskItemList.get(item).getId();
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     public void setTags(View view){
@@ -385,7 +413,7 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_new_task:
+            case R.id.action_save_task:
                 newTask();
         }
         return super.onOptionsItemSelected(item);

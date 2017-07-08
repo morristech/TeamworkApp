@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.project.Projects;
+import com.teamworkapp.data.model.task.NewTask;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.model.tasklist.Tasklists;
@@ -49,10 +50,10 @@ public class AddTaskPresenter extends BasePresenter<AddTaskView>{
         super.detachView();
     }
 
-    public void addTaskList(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+    public void addTaskList(TaskInterface taskInterface, NewTask newTask, String id){
 
         getMvpView().showLoading();
-        taskInteractor.addTask(taskInterface, taskUpdate, id);
+        taskInteractor.addTask(taskInterface, newTask, id);
 
     }
 
@@ -94,12 +95,7 @@ public class AddTaskPresenter extends BasePresenter<AddTaskView>{
                         List<Tasklist> arr = posts.getTasklists();
 
                         ArrayList<Tasklist> tasklistItem = new ArrayList<Tasklist>(arr);
-                        for(int i=0; i<tasklistItem.size(); i++){
-                            logger.debug(tasklistItem.get(i).getName());
-                            logger.debug(tasklistItem.get(i).getId());
-                        }
-
-                        //getMvpView().setProjectName(projectItemList);
+                        getMvpView().setTaskLists(tasklistItem);
 
                     }
                 }, new Action1<Throwable>() {
