@@ -415,7 +415,6 @@
                 android:background="@color/colorSeparator"/>
 
             <LinearLayout
-                android:onClick="setEstimated"
                 android:clickable="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

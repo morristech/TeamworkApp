@@ -1,5 +1,6 @@
 package com.teamworkapp.data.remote;
 
+import com.teamworkapp.data.model.Projects;
 import com.teamworkapp.data.model.Task;
 import com.teamworkapp.data.model.TaskUpdate;
 
@@ -22,9 +23,11 @@ public interface TaskInterface {
     @GET("/tasks.json")
     Observable<Task> getAllTask();
 
-
     @PUT("/tasks/{id}.json")
     void editTask(@Path("id") String id, @Body TaskUpdate body, Callback<Task> response);
+
+    @GET("/projects.json?status=ALL")
+    Observable<Projects> getAllProject();
 
 
 }

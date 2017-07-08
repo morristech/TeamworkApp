@@ -2,10 +2,14 @@ package com.teamworkapp.ui.edittask;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +22,7 @@ import android.widget.TextView;
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
 import com.teamworkapp.data.model.EditTask;
+import com.teamworkapp.data.model.Project;
 import com.teamworkapp.data.model.TaskUpdate;
 import com.teamworkapp.data.model.TodoItem;
 import com.teamworkapp.data.remote.TaskInterface;
@@ -63,6 +68,8 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     private SeekBar progressSeekbar;
 
+    private ArrayList<String> items = new ArrayList<String>();
+
     @Override
     protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
         setContentView(R.layout.activity_edit_task);
@@ -93,6 +100,8 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     // Initialize the view
     public void init() {
+
+        presenter.getProjectList(taskInterface, mCompositeSubscription);
 
         mainLayout = (LinearLayout) findViewById(R.id.edit_layout);
         title = (TextView) findViewById(R.id.title);
@@ -195,6 +204,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         estimated.setText(String.valueOf(cEstimated));
         priority.setText(cPriority);
 
+
     }
 
 
@@ -224,20 +234,49 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         }
     }
 
+    public void setProjectName(ArrayList<Project> projectNames){
+        for(int i=0; i<projectNames.size(); i++){
+            items.add(projectNames.get(i).getName().toString());
+        }
+    }
 
-    public void setProject(){
+
+    public void setProject(View view){
+
+        LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
+        final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
+                .setTitle("Select a Projects")
+                .setView(yourCustomView)
+                .setPositiveButton("SET PROJECT NAME", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .setSingleChoiceItems(items.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Log.d("CustomDialog", String.valueOf(item));
+                        projectName.setText(items.get(item).toString());
+                    }
+                })
+
+                .create();
+        dialog.show();
+
 
     }
 
-    public void setTaskList(){
+    public void setTaskList(View view){
 
     }
 
-    public void setTags(){
+    public void setTags(View view){
 
     }
 
-    public void setColumn(){
+    public void setColumn(View view){
 
     }
 
@@ -294,36 +333,44 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
             };
 
     private void showStartDate(int year, int month, int day) {
-        startDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
+        startDate.setText(new StringBuilder().append(convert(day)).append("/")
+                .append(convert(month)).append("/").append(year));
     }
 
     private void showDueDate(int year, int month, int day) {
-        dueDate.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
+        dueDate.setText(new StringBuilder().append(convert(day)).append("/")
+                .append(convert(month)).append("/").append(year));
     }
 
-    public void setEstimated(){
+    public String convert(int dates){
+        String newDate = String.valueOf(dates);
+        if(String.valueOf(dates).length() == 1) newDate = "0" + String.valueOf(dates);
+        return newDate;
+    }
+
+
+    public void setEstimated(View view){
 
     }
 
-    public void setPriority(){
+    public void setPriority(View view){
 
     }
 
     public String formatDateForward(String unformatedStr){
         String formatted = "";
-        formatted = unformatedStr.substring(6,7);
-        formatted = unformatedStr + "/" + unformatedStr.substring(4,5);
-        formatted = unformatedStr + "/" + unformatedStr.substring(0,3);
+        formatted = unformatedStr.substring(6);
+        formatted = formatted + "/" + unformatedStr.substring(4,6);
+        formatted = formatted + "/" + unformatedStr.substring(0,4);
         return formatted;
     }
 
     public String formatDateBackward(String unformatedStr){
         String formatted = "";
-        formatted = unformatedStr.substring(0,3);
-        formatted = unformatedStr + unformatedStr.substring(4,5);
-        formatted = unformatedStr + unformatedStr.substring(6,7);
+        unformatedStr = unformatedStr.replace("/","");
+        formatted = unformatedStr.substring(4);
+        formatted = formatted + unformatedStr.substring(2,4);
+        formatted = formatted + unformatedStr.substring(0,2);
         return formatted;
     }
 

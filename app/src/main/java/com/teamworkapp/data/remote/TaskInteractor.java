@@ -1,5 +1,6 @@
 package com.teamworkapp.data.remote;
 
+import com.teamworkapp.data.model.Projects;
 import com.teamworkapp.data.model.Task;
 import com.teamworkapp.data.model.TaskUpdate;
 
@@ -17,5 +18,7 @@ public interface TaskInteractor {
     Observable<Task> fetchAllTask(TaskInterface taskInterface);
 
     void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id);
+
+    Observable<Projects> fetchAllProject(TaskInterface taskInterface);
 
 }

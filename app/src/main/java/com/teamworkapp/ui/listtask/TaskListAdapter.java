@@ -104,7 +104,7 @@ public class TaskListAdapter
         }
 
         if (model.getDescription() != null) {
-            cDesc = model.getContent();
+            cDesc = model.getDescription();
         }
 
         if (model.getTags() != null) {
