@@ -26,8 +26,14 @@ public interface TaskInterface {
     @PUT("/tasks/{id}.json")
     void editTask(@Path("id") String id, @Body TaskUpdate body, Callback<Task> response);
 
+    @PUT("/tasklists/{id}/tasks.json")
+    void addTask(@Path("id") String id, @Body TaskUpdate body, Callback<Task> response);
+
     @GET("/projects.json?status=ALL")
     Observable<Projects> getAllProject();
+
+    @GET("/projects/{project_id}/tasklists.json")
+    Observable<Projects> getAllTasklist();
 
 
 }

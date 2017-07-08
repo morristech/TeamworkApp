@@ -57,7 +57,6 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mCompositeSubscription = new CompositeSubscription();
         init();

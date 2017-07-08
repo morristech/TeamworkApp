@@ -84,5 +84,20 @@ public class TaskInteractorImpl implements TaskInteractor {
 
     }
 
+    public void addTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+
+        taskInterface.editTask(id, taskUpdate, new Callback<Task>() {
+            @Override
+            public void success(Task info, Response response) {
+                Task example = info;
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d("RetrofitError: ", error.getLocalizedMessage());
+            }
+        });
+    }
+
 
 }

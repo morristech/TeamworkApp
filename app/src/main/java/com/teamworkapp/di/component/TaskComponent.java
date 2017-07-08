@@ -4,6 +4,7 @@ import com.teamworkapp.di.module.RetrofitModule;
 import com.teamworkapp.di.module.TaskFetcherModule;
 import com.teamworkapp.di.module.TaskModule;
 import com.teamworkapp.di.scope.UserScope;
+import com.teamworkapp.ui.addTask.AddTaskActivity;
 import com.teamworkapp.ui.edittask.EditTaskActivity;
 import com.teamworkapp.ui.listtask.ListTaskActivity;
 import com.teamworkapp.ui.listtask.ListTaskPresenter;
@@ -20,6 +21,7 @@ public interface TaskComponent {
 
     void inject(ListTaskActivity listTaskActivity);
     void inject(EditTaskActivity editTaskActivity);
+    void inject(AddTaskActivity addTaskActivity);
     void inject(ListTaskPresenter listTaskPresenter);
 
 }

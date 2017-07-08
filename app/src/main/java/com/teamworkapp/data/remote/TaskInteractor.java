@@ -21,4 +21,6 @@ public interface TaskInteractor {
 
     Observable<Projects> fetchAllProject(TaskInterface taskInterface);
 
+    void addTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id);
+
 }
