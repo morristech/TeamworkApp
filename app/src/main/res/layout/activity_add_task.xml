@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:layout_weight="1"
-                    android:text="No Project Selected"
+                    android:text="@string/project_name"
                     />
 
             </LinearLayout>
@@ -136,7 +136,7 @@
                     android:gravity="left"
                     android:layout_weight="1"
                     android:textStyle = "bold"
-                    android:text="Task List"
+                    android:text="@string/task_list"
                     />
 
                 <TextView
@@ -366,7 +366,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:layout_weight="1"
-                    android:text="No Date Chosen"
+                    android:text="@string/start_date"
                     />
 
 
@@ -404,7 +404,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:layout_weight="1"
-                    android:text="No Date Chosen"
+                    android:text="@string/due_date"
                     />
 
             </LinearLayout>

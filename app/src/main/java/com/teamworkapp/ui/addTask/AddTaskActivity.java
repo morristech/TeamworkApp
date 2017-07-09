@@ -54,6 +54,7 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
     private CompositeSubscription mCompositeSubscription;
     private LinearLayout mainLayout;
     private Snackbar snackbarOffline;
+    private Snackbar msg;
 
     private SeekBar seekBar;
     private TextView seekbarPercentage;
@@ -103,7 +104,7 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
 
         presenter.getProjectList(taskInterface, mCompositeSubscription);
 
-        mainLayout = (LinearLayout) findViewById(R.id.edit_layout);
+        mainLayout = (LinearLayout) findViewById(R.id.add_layout);
         title = (TextView) findViewById(R.id.title);
         description = (TextView) findViewById(R.id.description);
         projectName = (TextView) findViewById(R.id.project_name);
@@ -161,19 +162,20 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
         // fetch the Project TaskList
         // Retrieve the TaskList ID
         // Add New task with retrieved ID
+        if(validation()) {
+            AddTask ss = new AddTask();
+            ss.setContent(title.getText().toString());
+            ss.setDescription(description.getText().toString());
+            ss.setDueDate(formatDateBackward(dueDate.getText().toString()));
+            ss.setPriority(priority.getText().toString());
+            ss.setProgress(seekbarPercentage.getText().toString().replace("%", ""));
+            ss.setResponsiblePartyId("999");
+            ss.setStartDate(formatDateBackward(startDate.getText().toString()));
+            ss.setTags(tags.getText().toString());
 
-        AddTask ss = new AddTask();
-        ss.setContent(title.getText().toString());
-        ss.setDescription(description.getText().toString());
-        ss.setDueDate(formatDateBackward(dueDate.getText().toString()));
-        ss.setPriority(priority.getText().toString());
-        ss.setProgress(seekbarPercentage.getText().toString().replace("%", ""));
-        ss.setResponsiblePartyId("999");
-        ss.setStartDate(formatDateBackward(startDate.getText().toString()));
-        ss.setTags(tags.getText().toString());
-
-        NewTask nt = new NewTask(ss);
-        presenter.addTaskList(taskInterface, nt, taskListId);
+            NewTask nt = new NewTask(ss);
+            presenter.addTaskList(taskInterface, nt, taskListId);
+        }
 
     }
 
@@ -229,27 +231,34 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
 
     public void setTaskList(View view){
 
-        LayoutInflater inflater = LayoutInflater.from(AddTaskActivity.this);
-        final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
+        if(projectName.getText().toString().equals(getResources().getString(R.string.project_name))){
+            snackMsg("Please select a project first");
+        }
+        else if(taskItems.size() != 0) {
+            LayoutInflater inflater = LayoutInflater.from(AddTaskActivity.this);
+            final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
 
-        AlertDialog dialog = new AlertDialog.Builder(AddTaskActivity.this)
-                .setTitle("Select a Projects")
-                .setView(yourCustomView)
-                .setPositiveButton("SET TASK LIST", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        //
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .setSingleChoiceItems(taskItems.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        Log.d("CustomDialog", String.valueOf(item));
-                        taskType.setText(taskItems.get(item).toString());
-                        taskListId = taskItemList.get(item).getId();
-                    }
-                })
-                .create();
-        dialog.show();
+            AlertDialog dialog = new AlertDialog.Builder(AddTaskActivity.this)
+                    .setTitle("Select a Projects")
+                    .setView(yourCustomView)
+                    .setPositiveButton("SET TASK LIST", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .setSingleChoiceItems(taskItems.toArray(new String[taskItems.size()]), -1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            Log.d("CustomDialog", String.valueOf(item));
+                            taskType.setText(taskItems.get(item).toString());
+                            taskListId = taskItemList.get(item).getId();
+                        }
+                    })
+                    .create();
+            dialog.show();
+        } else {
+            snackMsg("Please wait, loading task lists");
+        }
     }
 
     public void setTags(View view){
@@ -374,6 +383,34 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
         if (snackbarOffline != null && snackbarOffline.isShown()) {
             snackbarOffline.dismiss();
         }
+    }
+
+    public void snackMsg(String message) {
+        msg = Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT);
+        TextView snackbarText = (TextView) msg.getView().findViewById(android.support.design.R.id.snackbar_text);
+        snackbarText.setTextColor(getApplicationContext().getResources().getColor(android.R.color.white));
+        msg.show();
+    }
+
+
+    public boolean validation(){
+        title = (TextView) findViewById(R.id.title);
+        if(title.getText().toString().equals("")){
+            snackMsg("Please enter a title");
+        } else if(description.getText().toString().equals("")){
+            snackMsg("Please enter a description");
+        } else if(projectName.getText().toString().equals(getResources().getString(R.string.project_name))){
+            snackMsg("Please select a project");
+        } else if(taskType.getText().toString().equals(getResources().getString(R.string.task_list))){
+            snackMsg("Please select a task");
+        } else if(startDate.getText().toString().equals(getResources().getString(R.string.start_date))){
+            snackMsg("Please choose a start date");
+        } else if(dueDate.getText().toString().equals(getResources().getString(R.string.due_date))){
+            snackMsg("Please choose a due date");
+        } else {
+            return true;
+        }
+        return false;
     }
 
 

@@ -53,6 +53,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     private CompositeSubscription mCompositeSubscription;
     private LinearLayout mainLayout;
     private Snackbar snackbarOffline;
+    private Snackbar msg;
 
     private SeekBar seekBar;
     private TextView seekbarPercentage;
@@ -269,6 +270,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                     }
                 })
                 .setNegativeButton("Cancel", null)
+
                 .setSingleChoiceItems(items.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         Log.d("CustomDialog", String.valueOf(item));
@@ -284,6 +286,10 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
 
     public void setTaskList(View view){
 
+        if(projectName.getText().toString().equals(getResources().getString(R.string.project_name))){
+            snackMsg("Please select a project first");
+        }
+        else if(taskItems.size() != 0) {
         LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
         final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
 
@@ -296,7 +302,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                     }
                 })
                 .setNegativeButton("Cancel", null)
-                .setSingleChoiceItems(taskItems.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
+                .setSingleChoiceItems(taskItems.toArray(new String[taskItems.size()]), -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         Log.d("CustomDialog", String.valueOf(item));
                         taskType.setText(taskItems.get(item).toString());
@@ -305,6 +311,9 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                 })
                 .create();
         dialog.show();
+        } else {
+            snackMsg("Please wait, loading task lists");
+        }
     }
 
     public void setTags(View view){
@@ -429,6 +438,13 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         if (snackbarOffline != null && snackbarOffline.isShown()) {
             snackbarOffline.dismiss();
         }
+    }
+
+    public void snackMsg(String message) {
+        msg = Snackbar.make(mainLayout, message, Snackbar.LENGTH_SHORT);
+        TextView snackbarText = (TextView) msg.getView().findViewById(android.support.design.R.id.snackbar_text);
+        snackbarText.setTextColor(getApplicationContext().getResources().getColor(android.R.color.white));
+        msg.show();
     }
 
 

@@ -128,8 +128,12 @@ public class ListTaskActivity extends BaseActivity implements ListTaskView {
     }
 
     public void addNewTask(){
-        Intent intent = new Intent(this, AddTaskActivity.class);
-        startActivity(intent);
+        if(NetworkUtil.isConnected(getApplicationContext())) {
+            Intent intent = new Intent(this, AddTaskActivity.class);
+            startActivity(intent);
+        } else {
+            displayOfflineSnackbar();
+        }
     }
 
     @Override
