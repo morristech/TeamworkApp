@@ -25,8 +25,10 @@ import com.teamworkapp.data.model.task.EditTask;
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.task.TodoItem;
+import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
+import com.teamworkapp.ui.addTask.AddTaskActivity;
 import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
 import com.teamworkapp.util.NetworkUtil;
@@ -67,8 +69,13 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     private TextView title, description, projectName, taskType, tags, seekPercentage, estimated, priority;
 
     private SeekBar progressSeekbar;
-
     private ArrayList<String> items = new ArrayList<String>();
+
+    private ArrayList<String> taskItems = new ArrayList<String>();
+    private ArrayList<Tasklist> taskItemList = new ArrayList<Tasklist>();
+
+    private String projectId;
+    private String taskListId;
 
     @Override
     protected void setupActivity(TaskComponent component, Bundle savedInstanceState) {
@@ -203,7 +210,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         dueDate.setText(formattedDueDate);
         estimated.setText(String.valueOf(cEstimated));
         priority.setText(cPriority);
-
+        projectId = mTodoItem.get(position).getProjectId().toString();
 
     }
 
@@ -241,6 +248,13 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
     }
 
 
+    public void setTaskLists(ArrayList<Tasklist> taskListNames){
+        taskItemList = taskListNames;
+        for(int i=0; i<taskListNames.size(); i++){
+            taskItems.add(taskListNames.get(i).getName().toString());
+        }
+    }
+
     public void setProject(View view){
 
         LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
@@ -251,7 +265,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                 .setView(yourCustomView)
                 .setPositiveButton("SET PROJECT NAME", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //
+                        presenter.getTaskList(taskInterface, mCompositeSubscription, projectId);
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -265,11 +279,32 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
                 .create();
         dialog.show();
 
-
     }
+
 
     public void setTaskList(View view){
 
+        LayoutInflater inflater = LayoutInflater.from(EditTaskActivity.this);
+        final View yourCustomView = inflater.inflate(R.layout.setreminder, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(EditTaskActivity.this)
+                .setTitle("Select a Projects")
+                .setView(yourCustomView)
+                .setPositiveButton("SET TASK LIST", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .setSingleChoiceItems(taskItems.toArray(new String[items.size()]), -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        Log.d("CustomDialog", String.valueOf(item));
+                        taskType.setText(taskItems.get(item).toString());
+                        taskListId = taskItemList.get(item).getId();
+                    }
+                })
+                .create();
+        dialog.show();
     }
 
     public void setTags(View view){
