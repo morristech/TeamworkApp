@@ -21,14 +21,13 @@ import android.widget.TextView;
 
 import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
-import com.teamworkapp.data.model.task.EditTask;
 import com.teamworkapp.data.model.project.Project;
+import com.teamworkapp.data.model.task.EditTask;
 import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.remote.TaskInterface;
 import com.teamworkapp.di.component.TaskComponent;
-import com.teamworkapp.ui.addTask.AddTaskActivity;
 import com.teamworkapp.ui.base.BaseActivity;
 import com.teamworkapp.util.Logger;
 import com.teamworkapp.util.NetworkUtil;
@@ -99,7 +98,6 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
             position = extras.getInt("position");
             setValues();
         }
-
 
         loadView();
 
@@ -229,7 +227,7 @@ public class EditTaskActivity extends BaseActivity implements EditTaskView {
         ss.setTags(tags.getText().toString());
 
         TaskUpdate tu = new TaskUpdate(ss);
-        presenter.updateTaskList(taskInterface, tu, postId);
+        presenter.updateTaskList(taskInterface, tu, postId, getApplicationContext());
 
     }
 

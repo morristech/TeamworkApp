@@ -1,6 +1,7 @@
 package com.teamworkapp.ui.edittask;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.project.Projects;
@@ -49,10 +50,10 @@ public class EditTaskPresenter extends BasePresenter<EditTaskView>{
         super.detachView();
     }
 
-    public void updateTaskList(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+    public void updateTaskList(TaskInterface taskInterface, TaskUpdate taskUpdate, String id, Context context){
 
         getMvpView().showLoading();
-        taskInteractor.updateTask(taskInterface, taskUpdate, id);
+        taskInteractor.updateTask(taskInterface, taskUpdate, id, context);
 
     }
 

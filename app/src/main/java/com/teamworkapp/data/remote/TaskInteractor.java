@@ -1,5 +1,7 @@
 package com.teamworkapp.data.remote;
 
+import android.content.Context;
+
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.NewTask;
 import com.teamworkapp.data.model.task.Task;
@@ -19,11 +21,11 @@ public interface TaskInteractor {
 
     Observable<Task> fetchAllTask(TaskInterface taskInterface);
 
-    void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id);
+    void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id, Context context);
 
     Observable<Projects> fetchAllProject(TaskInterface taskInterface);
 
-    void addTask(TaskInterface taskInterface, NewTask newTask, String id);
+    void addTask(TaskInterface taskInterface, NewTask newTask, String id, Context context);
 
     Observable<Tasklists> fetchTaskList(TaskInterface taskInterface, String projectId);
 

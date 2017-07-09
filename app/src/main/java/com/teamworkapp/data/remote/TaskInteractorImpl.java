@@ -1,7 +1,9 @@
 package com.teamworkapp.data.remote;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.NewTask;
@@ -52,17 +54,24 @@ public class TaskInteractorImpl implements TaskInteractor {
     }
 
 
-    public void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id){
+    public void updateTask(TaskInterface taskInterface, TaskUpdate taskUpdate, String id, final Context context){
 
         taskInterface.editTask(id, taskUpdate, new Callback<Task>() {
             @Override
             public void success(Task info, Response response) {
-                Task example = info;
+
+                if(response.getStatus() == 200){
+                    toastMsg("Task Updated Successfully", context);
+                } else {
+                    toastMsg(response.getReason(), context);
+                }
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d("RetrofitError: ", error.getLocalizedMessage());
+                toastMsg(error.getLocalizedMessage().toString(), context);
             }
         });
     }
@@ -86,17 +95,24 @@ public class TaskInteractorImpl implements TaskInteractor {
     }
 
 
-    public void addTask(TaskInterface taskInterface, NewTask newTask, String id){
+    public void addTask(TaskInterface taskInterface, NewTask newTask, String id, final Context context){
 
         taskInterface.addTask(id, newTask, new Callback<Task>() {
             @Override
             public void success(Task info, Response response) {
-                Task example = info;
+
+                if(response.getStatus() == 201 ){
+                    toastMsg("Task Created Successfully", context);
+                } else {
+                    toastMsg(response.getReason(), context);
+                }
+
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.d("RetrofitError: ", error.getLocalizedMessage());
+                toastMsg(error.getLocalizedMessage().toString(), context);
             }
         });
     }
@@ -118,6 +134,10 @@ public class TaskInteractorImpl implements TaskInteractor {
                     }
                 });
 
+    }
+
+    public void toastMsg(String str, Context context){
+        Toast.makeText(context, str, Toast.LENGTH_LONG).show();
     }
 
 

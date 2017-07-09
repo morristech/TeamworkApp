@@ -6,9 +6,9 @@
     <string name="snackbar_action_retry">Retry</string>
 
     <!-- textviews -->
-    <string name="project_name">No connection !</string>
-    <string name="task_list">No connection !</string>
-    <string name="start_date">No connection !</string>
-    <string name="due_date">No connection !</string>
+    <string name="project_name">No Project Selected</string>
+    <string name="task_list">No Task List Selected</string>
+    <string name="start_date">No Start Date Selected</string>
+    <string name="due_date">No Due Date Selected</string>
 
 </resources>

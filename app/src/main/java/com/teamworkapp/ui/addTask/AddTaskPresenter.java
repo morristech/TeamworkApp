@@ -1,12 +1,11 @@
 package com.teamworkapp.ui.addTask;
 
 import android.app.Application;
-import android.util.Log;
+import android.content.Context;
 
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.project.Projects;
 import com.teamworkapp.data.model.task.NewTask;
-import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.model.tasklist.Tasklists;
 import com.teamworkapp.data.remote.TaskInteractor;
@@ -29,7 +28,6 @@ import rx.subscriptions.CompositeSubscription;
 public class AddTaskPresenter extends BasePresenter<AddTaskView>{
 
     private final Application application;
-    private AddTaskView addTaskView;
     private Logger logger = Logger.getLogger(getClass());
 
     TaskInteractor taskInteractor;
@@ -50,10 +48,10 @@ public class AddTaskPresenter extends BasePresenter<AddTaskView>{
         super.detachView();
     }
 
-    public void addTaskList(TaskInterface taskInterface, NewTask newTask, String id){
+    public void addTaskList(TaskInterface taskInterface, NewTask newTask, String id, Context context){
 
         getMvpView().showLoading();
-        taskInteractor.addTask(taskInterface, newTask, id);
+        taskInteractor.addTask(taskInterface, newTask, id, context);
 
     }
 

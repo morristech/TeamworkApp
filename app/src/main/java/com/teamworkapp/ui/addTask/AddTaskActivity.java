@@ -23,9 +23,7 @@ import com.teamworkapp.BaseApplication;
 import com.teamworkapp.R;
 import com.teamworkapp.data.model.project.Project;
 import com.teamworkapp.data.model.task.AddTask;
-import com.teamworkapp.data.model.task.EditTask;
 import com.teamworkapp.data.model.task.NewTask;
-import com.teamworkapp.data.model.task.TaskUpdate;
 import com.teamworkapp.data.model.task.TodoItem;
 import com.teamworkapp.data.model.tasklist.Tasklist;
 import com.teamworkapp.data.remote.TaskInterface;
@@ -93,7 +91,6 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
 
         mCompositeSubscription = new CompositeSubscription();
         init();
-
 
         loadView();
     }
@@ -174,7 +171,7 @@ public class AddTaskActivity extends BaseActivity implements AddTaskView {
             ss.setTags(tags.getText().toString());
 
             NewTask nt = new NewTask(ss);
-            presenter.addTaskList(taskInterface, nt, taskListId);
+            presenter.addTaskList(taskInterface, nt, taskListId, getApplicationContext());
         }
 
     }
