@@ -20,7 +20,9 @@ public class Api {
 }
 ```
 
-### Location: https://github.com/tosinonikute/TeamworkApp/blob/master/app/src/main/java/com/teamworkapp/Api.java
+```
+Location: https://github.com/tosinonikute/TeamworkApp/blob/master/app/src/main/java/com/teamworkapp/Api.java
+```
 
 
 ## Functionalities in this App
